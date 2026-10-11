@@ -1,0 +1,53 @@
+image:
+  tag: "2.42.3"
+
+queueMode:
+  enabled: false
+
+redis:
+  enabled: false
+
+database:
+  type: postgresdb
+  useExternal: true
+  host: postgres-dev-rw.pg-dev.svc.cluster.local
+  port: 5432
+  database: n8n
+  schema: public
+  user: n8n
+  passwordSecret:
+    name: n8n-db-secret
+    key: password
+
+secretRefs:
+  existingSecret: n8n-core-secrets
+
+persistence:
+  enabled: true
+  size: 2Gi
+
+strategy:
+  type: Recreate
+
+resources:
+  main:
+    requests: { cpu: 200m, memory: 512Mi }
+    limits: { cpu: "1", memory: 1Gi }
+
+config:
+  timezone: Europe/Stockholm
+  extraEnv:
+    - name: N8N_SECURE_COOKIE
+      value: "false"      # needed because we use plain http
+
+webhook:
+  url: "http://n8n.home.lab"
+
+ingress:
+  enabled: true
+  className: traefik
+  hosts:
+    - host: n8n.home.lab
+      paths:
+        - path: /
+          pathType: Prefix

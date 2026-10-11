@@ -1,0 +1,24 @@
+replicaCount: 1
+
+nodeSelector:
+  node-role.kubernetes.io/worker: "worker"
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 256Mi
+
+crds:
+  create: true
+
+config:
+  clusterWide: true
+  maxConcurrentReconciles: 5
+
+monitoring:
+  podMonitorEnabled: false
+  grafanaDashboard:
+    create: false

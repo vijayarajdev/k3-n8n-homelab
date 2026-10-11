@@ -1,0 +1,49 @@
+apiVersion: mongodbcommunity.mongodb.com/v1
+kind: MongoDBCommunity
+metadata:
+  name: {{ .Values.name }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  members: {{ .Values.members }}
+  type: ReplicaSet
+  version: {{ .Values.version | quote }}
+  security:
+    authentication:
+      modes: ["SCRAM"]
+  users:
+    - name: {{ .Values.user.name }}
+      db: {{ .Values.user.db }}
+      passwordSecretRef:
+        name: {{ .Values.user.passwordSecret }}
+      roles:
+        {{- toYaml .Values.user.roles | nindent 8 }}
+      scramCredentialsSecretName: {{ .Values.user.scramSecret }}
+  statefulSet:
+    spec:
+      volumeClaimTemplates:
+        - metadata:
+            name: data-volume
+          spec:
+            accessModes: ["ReadWriteOnce"]
+            {{- with .Values.storage.storageClass }}
+            storageClassName: {{ . }}
+            {{- end }}
+            resources:
+              requests:
+                storage: {{ .Values.storage.dataSize }}
+        - metadata:
+            name: logs-volume
+          spec:
+            accessModes: ["ReadWriteOnce"]
+            {{- with .Values.storage.storageClass }}
+            storageClassName: {{ . }}
+            {{- end }}
+            resources:
+              requests:
+                storage: {{ .Values.storage.logsSize }}
+      template:
+        spec:
+          containers:
+            - name: mongod
+              resources:
+                {{- toYaml .Values.resources | nindent 16 }}

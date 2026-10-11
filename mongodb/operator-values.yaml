@@ -1,0 +1,12 @@
+# Overrides for mongodb/community-operator (the operator). Defaults are fine for this lab.
+# Overrides for mongodb/mongodb-kubernetes (the operator)
+operator:
+  nodeSelector:
+    node-role.kubernetes.io/worker: "worker"
+  resources:
+    requests:
+      cpu: 100m
+      memory: 200Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi

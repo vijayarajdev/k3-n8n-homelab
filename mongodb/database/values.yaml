@@ -1,0 +1,25 @@
+name: mongo
+members: 1
+version: "8.0.4"          # must be a version the operator supports
+
+user:
+  name: n8n
+  db: admin
+  passwordSecret: mongo-user-pass   # secret in mongodb-dev, key: password
+  scramSecret: n8n-scram
+  roles:
+    - name: readWrite
+      db: n8ndata
+
+storage:
+  storageClass: local-path
+  dataSize: 20Gi
+  logsSize: 2Gi
+
+resources:
+  requests:
+    cpu: 250m
+    memory: 512Mi
+  limits:
+    cpu: "1"
+    memory: 1Gi

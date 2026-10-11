@@ -1,0 +1,6 @@
+apiVersion: v2
+name: mongo-database
+description: MongoDBCommunity replica set for n8n
+type: application
+version: 0.1.0
+appVersion: "8.0.4"
